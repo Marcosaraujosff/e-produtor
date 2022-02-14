@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "87756693548",
+    "project_id": "e-produtor-8b87f",
+    "storage_bucket": "e-produtor-8b87f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:87756693548:android:9160cf7f8221957143b189",
+        "android_client_info": {
+          "package_name": "com.eprodutor"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "87756693548-7feofq31vgfn8o7heohn0ssf5qq2sn1i.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA-8c9ge-mSf7WsOP_aER-Apd5hF8cmrM0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "87756693548-7feofq31vgfn8o7heohn0ssf5qq2sn1i.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
