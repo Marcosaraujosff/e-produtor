@@ -1,8 +1,4 @@
 import React, { useContext, useMemo } from "react";
-import {
-    View
-}
-    from 'react-native';
 
 import {
     Container

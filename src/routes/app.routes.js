@@ -11,11 +11,15 @@ import Newpost from '../pages/Newpost';
 import Postsuser from "../pages/Postsuser";
 import Profile from "../pages/Profile";
 import Search from "../pages/Search";
-import App from "../../App";
 import Notification from "../pages/Notification";
 import Chat from "../pages/Chat";
 import Store from "../pages/Store";
 import Messages from "../pages/Messages";
+import MoreFunctions from "../pages/MenuHamburguer";
+import Quotes from "../pages/Quotes";
+import Schedule from "../pages/Schedule";
+import WeatherForecast from "../pages/WeatherForecast";
+import Calculator from "../pages/Calculator";
 
 
 const Tab = createBottomTabNavigator();
@@ -31,6 +35,21 @@ function StackRoutes() {
                     headerShown: false
                 }}
 
+            />
+
+            <Stack.Screen
+                name="Profile"
+                component={Profile}
+                options={{
+                    headerShown: false
+                }}
+            />
+            <Stack.Screen
+                name="Notification"
+                component={Notification}
+                options={{
+                    headerShown: false
+                }}
             />
             <Stack.Screen
                 name="NewPost"
@@ -54,6 +73,17 @@ function StackRoutes() {
                 }}
             />
             <Stack.Screen
+                name="WeatherForecast"
+                component={WeatherForecast}
+                options={{
+                    headerShown: false,
+                    headerTintColor: '#FFF',
+                    headerStyle: {
+                        backgroundColor: '#36393F'
+                    }
+                }}
+            />
+            <Stack.Screen
                 name="Messages"
                 component={Messages}
                 options={({ route }) => ({
@@ -63,6 +93,30 @@ function StackRoutes() {
                 })}
 
             />
+            <Stack.Screen
+                name="Quotes"
+                component={Quotes}
+                options={{
+                    headerShown: false
+                }}
+
+            />
+            <Stack.Screen
+                name="Schedule"
+                component={Schedule}
+                options={{
+                    headerShown: false
+                }}
+
+            />
+            <Stack.Screen
+                name="Calculator"
+                component={Calculator}
+                options={{
+                    headerShown: false
+                }}
+            />
+
         </Stack.Navigator>
     )
 }
@@ -124,18 +178,8 @@ function AppRoutes() {
             />
 
             <Tab.Screen
-                name="Profile"
-                component={Profile}
-                options={{
-                    tabBarIcon: ({ color, size }) => {
-                        return <Feather name="user" color={color} size={size} />
-                    }
-                }}
-            />
-
-            <Tab.Screen
-                name="Notification"
-                component={Notification}
+                name="MoreFunctions"
+                component={MoreFunctions}
                 options={{
                     tabBarIcon: ({ color, size }) => {
                         return <Feather name="menu" color={color} size={size} />

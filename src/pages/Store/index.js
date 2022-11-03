@@ -1,17 +1,9 @@
+import StoreDefault from "../../components/StoreDefault";
+
 import React, { useContext } from "react";
-
-import Header from "../../components/Header"
-
-import {
-    Text
-
-} from 'react-native';
 
 import {
     Container
-    , TextDemonstration
-    , TitlePage
-
 } from './styles'
 
 import { AuthContext } from '../../contexts/auth';
@@ -24,11 +16,7 @@ function Store() {
 
     return (
         <Container>
-            <Header />
-
-            <TitlePage>
-            <TextDemonstration>Seja bem vindo <Text style={{color: '#64943f'}}>{user?.nome}</Text></TextDemonstration>
-            </TitlePage>
+            <StoreDefault />
         </Container>
     )
 }

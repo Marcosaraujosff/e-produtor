@@ -91,5 +91,6 @@ padding: 10px;
 font-size: 18px;
 color: #121212;
 text-align: center;
+margin-top: 5px;
 `;
 

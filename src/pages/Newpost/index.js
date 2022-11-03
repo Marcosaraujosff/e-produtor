@@ -7,6 +7,8 @@ import { Container, Input, ButtonText, Button } from './styles'
 
 import firestore from '@react-native-firebase/firestore';
 import storage from '@react-native-firebase/storage'
+import { api } from "../../services/api";
+import { id } from "date-fns/locale";
 
 function Newpost() {
 
@@ -16,14 +18,19 @@ function Newpost() {
 
   const { user } = useContext(AuthContext);
 
+
+  console.log(user)
+
   useLayoutEffect(() => {
+
+    console.log(user)
 
     const options = navigation.setOptions({
       headerRight: () => (
         <Button onPress={() => handlePost()}>
           <ButtonText>Compartilhar</ButtonText>
         </Button>
-      )
+      ),
     })
 
   }, [navigation, post])
@@ -34,33 +41,54 @@ function Newpost() {
       return;
     }
 
-    let avatarUrl = null;
+    let avatarUrl = " ";
 
-    try {
-      let response = await storage().ref('users').child(user?.uid).getDownloadURL();  // Obtem as informações no banco se tem foto do perfil ou não.
-      avatarUrl = response;
+    /*  try {
+        let response = await storage().ref('users').child(user?.uid).getDownloadURL();  // Obtem as informações no banco se tem foto do perfil ou não.
+        avatarUrl = response;
+  
+      } catch (err) {
+        avatarUrl = null;
+      }   */
 
-    } catch (err) {
-      avatarUrl = null;
+    const data = {
+      content: post,
+      autor: user?.name,
+      userId: user?.id,
+      likes: '0',
+      avatarUrl: avatarUrl
     }
 
-    await firestore().collection('posts')
-      .add({
-        created: new Date(),
-        content: post,
-        autor: user?.nome,
-        userId: user?.uid,
-        likes: 0,
-        avatarUrl,
-      })
-      .then(() => {
-        setPost('')
-      })
-      .catch((error) => {
-        alert('Erro ao criar a publicação', error)
-      })
+    try {
 
-    navigation.goBack();
+      const response = await api.post('newPost', data)
+
+      setPost('')
+
+    } catch (error) {
+      console.log("erro :", error)
+    }
+
+
+    /* await firestore().collection('posts')
+       .add({
+         created: new Date(),
+         content: post,
+         autor: user?.nome,
+         userId: user?.uid,
+         likes: 0,
+         avatarUrl,
+       })
+       .then(() => {
+         setPost('')
+       })
+       .catch((error) => {
+         alert('Erro ao criar a publicação', error)
+       })
+ 
+       */
+
+    navigation.goBack()
   }
 
 

@@ -25,6 +25,53 @@ function PostsList({ data, userId }) {
     const navigation = useNavigation()
     const [likePost, setLikePost] = useState(data?.likes)
 
+    async function handleLikePost(id, likes) {
+        const docId = `${userId}_${id}`;
+
+        const doc = await firestore().collection('likes')
+            .doc(docId).get();
+
+        if (doc.exists) {
+            await firestore().collection('posts')
+                .doc(id).update({
+                    likes: likes - 1
+                })
+
+            await firestore().collection('likes').doc(docId)
+                .delete()
+                .then(() => {
+                    setLikePost(likes - 1)
+                })
+            return;
+        }
+
+        await firestore().collection('likes')
+            .doc(docId).set({
+                postId: id,
+                userId: userId
+            })
+        await firestore().collection('posts')
+            .doc(id).update({
+                likes: likes + 1
+            })
+            .then(() => {
+                setLikePost(likes + 1)
+            })
+
+    }
+
+    function formatTimePost() {
+        const datePost = new Date(data.created.seconds * 1000);
+
+        return formatDistance(
+            new Date(),
+            datePost,
+            {
+                locale: ptBR
+            }
+        )
+    }
+
 
     return (
         <Container>
@@ -73,56 +120,6 @@ function PostsList({ data, userId }) {
             </Actions>
         </Container>
     )
-
-    async function handleLikePost(id, likes) {
-        const docId = `${userId}_${id}`;
-
-        const doc = await firestore().collection('likes')
-            .doc(docId).get();
-
-        // Verificar se o like ja foi dado pelo user, e se ja foi, dar deslike.
-        if (doc.exists) {
-            await firestore().collection('posts')
-                .doc(id).update({
-                    likes: likes - 1
-                })
-
-            await firestore().collection('likes').doc(docId)
-                .delete()
-                .then(() => {
-                    setLikePost(likes - 1)
-                })
-            return;
-        }
-
-        // Se o like ainda não foi dado, realizar o like na publicação.
-
-        await firestore().collection('likes')
-            .doc(docId).set({
-                postId: id,
-                userId: userId
-            })
-        await firestore().collection('posts')
-            .doc(id).update({
-                likes: likes + 1
-            })
-            .then(() => {
-                setLikePost(likes + 1)
-            })
-
-    }
-
-    function formatTimePost() {
-        const datePost = new Date(data.created.seconds * 1000);
-
-        return formatDistance(
-            new Date(),
-            datePost,
-            {
-                locale: ptBR
-            }
-        )
-    }
 }
 
 export default PostsList;

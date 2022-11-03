@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 
 import {
   SafeAreaView
@@ -9,18 +9,18 @@ import {
 } from 'react-native';
 
 import { useIsFocused } from "@react-navigation/native";
-import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 
 import Header from "../../components/Header";
 import ModalNewGroup from "../../components/ModalNewGroup";
 import ButtonNewTab from "../../components/ButtonNewTab";
 import ChatList from "../../components/ChatList";
+import { AuthContext } from "../../contexts/auth";
 
 
 function Chat() {
 
-  const user = auth().currentUser.toJSON();
+  const { user } = useContext(AuthContext)
 
   const isFocused = useIsFocused();
 
@@ -35,7 +35,7 @@ function Chat() {
     function getChats() {
       firestore()
         .collection('MESSAGE_THREADS')
-        .orderBy('lastMessage.createdAt', 'desc')  // Ordenar as mensagens pela ultima enviada.
+        .orderBy('lastMessage.createdAt', 'desc') 
         .limit(10)
         .get()
         .then((snapshot) => {
@@ -63,7 +63,7 @@ function Chat() {
   }
 
   function deleteChat(ownerId, idChat) {
-    if (ownerId !== user?.uid)  // Verificação para permitir o user deletar apenas salas que ele criou.
+    if (ownerId !== user?.uid) 
       return;
 
     Alert.alert(
@@ -85,14 +85,13 @@ function Chat() {
     )
 
   }
-  // Ir no banco e deletar a sala de chat
   async function handleDeleteChat(idChat) {
     await firestore()
       .collection('MESSAGE_THREADS')
       .doc(idChat)
       .delete()
 
-    setUpdateScreen(!updateScreen);  // Atualizar os chats para renderizar novamente.
+    setUpdateScreen(!updateScreen);
 
   }
 

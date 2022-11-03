@@ -18,7 +18,7 @@ buildscript {
         // in the individual module build.gradle files
 
         classpath 'com.google.gms:google-services:4.3.10'
-    }
+    }  
 }
 
 allprojects {
@@ -36,5 +36,6 @@ allprojects {
 
         google()
         maven { url 'https://www.jitpack.io' }
+     
     }
 }

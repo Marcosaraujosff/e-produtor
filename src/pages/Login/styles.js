@@ -19,7 +19,7 @@ font-style: italic;
 export const Input = styled.TextInput `
 width: 80%;
 background-color: #FFF;
-margin-top: 10px;
+margin-top: 8px;
 padding: 10px;
 border-radius: 8px;
 font-size: 17px;

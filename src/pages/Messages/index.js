@@ -1,15 +1,12 @@
 import React, { useState, useEffect, useContext } from 'react';
 import {
-    View
-    , Text
-    , FlatList
+    FlatList
     , SafeAreaView
     , KeyboardAvoidingView
     , Platform
 }
     from 'react-native';
 
-import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 
 import Feather from 'react-native-vector-icons/Feather';
@@ -26,7 +23,6 @@ import {
     from './styles';
 
 import MessagesChat from '../../components/MessagesChat';
-//import HeaderMessages from '../../components/HeaderMessages'
 
 function Messages({ route }) {
 
@@ -74,7 +70,6 @@ function Messages({ route }) {
         return () => unsubscribeListener();
 
     }, []);
-    // Enviar as mensagens digitadas para o db.
     async function handleSendMessage() {
         if (textInput === '')
             return;
@@ -103,12 +98,12 @@ function Messages({ route }) {
                     }
                 },
                 {
-                    merge: true   // Atualiza com o que ja tem no banco (update)
+                    merge: true
                 }
 
             )
 
-        setTextInput('');  // Limpar campo do input após enviar a mensagem pro db.
+        setTextInput('');
 
     }
 

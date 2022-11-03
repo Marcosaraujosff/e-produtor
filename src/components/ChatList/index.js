@@ -1,7 +1,5 @@
 import React from "react";
 import {
-    View
-    , Text
 
 } from 'react-native';
 
@@ -19,7 +17,7 @@ import {
 function ChatList({ data, deleteChat }) {
 
     const navigation = useNavigation();
-    // Navegar até as mensagens do chat especifico.
+
     function openMessages(){
         navigation.navigate("Messages", {thread: data})
     }

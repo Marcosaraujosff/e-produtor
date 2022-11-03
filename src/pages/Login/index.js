@@ -1,17 +1,17 @@
-import React, { useState, useContext} from "react";
+import React, { useState, useContext } from "react";
 
 import { ActivityIndicator, Image } from 'react-native';
 
 import * as Animatable from 'react-native-animatable';
 
-import { 
-    Container
+import {
+  Container
   , Input
   , ButtonText
   , Button
   , SignUpButton
-  , SignUpText 
-        } from "./styles";
+  , SignUpText
+} from "./styles";
 
 import { AuthContext } from '../../contexts/auth';
 
@@ -23,119 +23,148 @@ function Login() {
   const [name, setName] = useState("")
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
-  
+  const [cpf_cnpj, setCpf_cnpj] = useState("")
+  const [city, setCity] = useState("")
+  const [zipcode, setZipcode] = useState("")
+
   const { signUp, signIn, loadingAuth } = useContext(AuthContext)
 
-  function ToggleLogin(){
-    setLogin(!login)  // Função para renderização condicional (Login ou Cadastrar)
+  function ToggleLogin() {
+    setLogin(!login)
     setName('')
-    setPassword('')   // Manter sempre os campos vazios na renderização condiiconal
+    setPassword('')
     setEmail('')
   }
 
-  async function handleSignIn(){
-    // verificar se todos dados estão preenchidos, e se nao estiverem, não ser possivel o login
-    if(email === '' || password === ''){
+  async function handleSignIn() {
+
+    if (email === '' || password === '') {
       alert("Ops, os dados digitados não conferem..")
       return;
     }
-    // Fazer o login do Usuario
 
     await signIn(email, password)
 
   }
 
-  async function handleSignUp(){
-    // verificar se todos dados estão preenchidos, e se nao estiverem, não ser possivel realizar o cadastro
-    if(name === '' || email === '' || password === ''){
+  async function handleSignUp() {
+
+    if (name === '' || email === '' || password === '' || zipcode === '' || cpf_cnpj === '' || city) {
+
       alert("Favor preencher todos os dados para se cadastrar.")
+
       return;
     }
 
-    // Cadastrar usuario na aplicação
+    const data = {
+      email,
+      password,
+      name,
+      zipcode,
+      city,
+      cpf_cnpj
+    }
 
-    await signUp(email, password, name)
+    await signUp(data)
   }
 
-  if(login){
-  return (
-    <Container>
-      <LogoAnimated animation="zoomIn"
-        source={require('../../assets/logo.png')}
-        style={{ width: 300, height: 300 }}
-      />
+  if (login) {
+    return (
+      <Container>
+        <LogoAnimated animation="pulse"
+          source={require('../../assets/logo.png')}
+          style={{ width: 300, height: 300 }}
+        />
 
-      <Input
-        placeholder="example@example.com"
-        value={email}
-        onChangeText={ (text) => setEmail(text)}
-      />
+        <Input
+          placeholder="example@example.com"
+          value={email}
+          onChangeText={(text) => setEmail(text)}
+        />
 
-      <Input
-        placeholder="**********"
-        value={password}
-        onChangeText={ (text) => setPassword(text)}
-        secureTextEntry={true}
-      />
+        <Input
+          placeholder="**********"
+          value={password}
+          onChangeText={(text) => setPassword(text)}
+          secureTextEntry={true}
+        />
 
-      <Button onPress={handleSignIn} > 
-        {loadingAuth 
-        ? (
-          <ActivityIndicator size={20} color="#FFF" /> 
-        )            
-        : (
-          <ButtonText>Acessar</ButtonText>
-        )}
-      </Button>
+        <Button onPress={handleSignIn} >
+          {loadingAuth
+            ? (
+              <ActivityIndicator size={20} color="#FFF" />
+            )
+            : (
+              <ButtonText> Acessar </ButtonText>
+            )}
+        </Button>
 
-      <SignUpButton onPress={ToggleLogin} >
-        <SignUpText>Criar uma conta</SignUpText>
-      </SignUpButton>
+        <SignUpButton onPress={ToggleLogin} >
+          <SignUpText> Criar uma conta </SignUpText>
+        </SignUpButton> 
 
-    </Container>
-  );
+      </Container>
+    );
   }
 
   return (
     <Container>
-      
+
       <LogoAnimated animation="pulse"
         source={require('../../assets/logo.png')}
         style={{ width: 300, height: 300 }}
       />
-      
-      
+
+
 
       <Input
         placeholder="Digite seu nome"
         value={name}
-        onChangeText={ (text) => setName(text)}
+        onChangeText={(text) => setName(text)}
       />
 
       <Input
         placeholder="Digite seu email"
         value={email}
-        onChangeText={ (text) => setEmail(text)}
+        onChangeText={(text) => setEmail(text)}
       />
 
       <Input
         placeholder="Crie uma senha"
         value={password}
-        onChangeText={ (text) => setPassword(text)}
+        onChangeText={(text) => setPassword(text)}
         secureTextEntry={true}
       />
 
-      <Button onPress={handleSignUp} >
-      {loadingAuth 
-        ? (
-          <ActivityIndicator size={20} color="#FFF" /> 
-        )            
-        : (
-          <ButtonText>Cadastrar</ButtonText>
-        )}
+      <Input
+        placeholder="Digite seu cpf/cnpj"
+        value={cpf_cnpj}
+        onChangeText={(text) => setCpf_cnpj(text)}
+      />
+
+      <Input
+        placeholder="Qual sua cidade?"
+        value={city}
+        onChangeText={(text) => setCity(text)}
+      />
+
+      <Input
+        placeholder="Digite seu CEP"
+        value={zipcode}
+        onChangeText={(text) => setZipcode(text)}
+      />
+
+      <Button onPress={ handleSignUp } >
+        {loadingAuth
+          ? (
+            <ActivityIndicator size={20} color="#FFF" />
+          )
+          : (
+            <ButtonText>Cadastrar</ButtonText>
+          )}
       </Button>
 
-      <SignUpButton onPress={ToggleLogin} >
+      <SignUpButton onPress={ ToggleLogin } >
         <SignUpText>Ja possui uma conta?</SignUpText>
       </SignUpButton>
 

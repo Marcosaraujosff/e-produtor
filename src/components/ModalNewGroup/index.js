@@ -20,26 +20,24 @@ function ModalNewGroup({ setVisible, setUpdateScreen }) {
 
     const [nameChat, setNameChat] = useState('');
 
-    const user = auth().currentUser.toJSON();  // Obtem as informações do usuario logado no app e retorna em JSON.
-
-
+    const user = auth().currentUser.toJSON();
+    
     function handleButtonCreate() {
 
         if (nameChat === '')
             return;
 
-        // Validação para permitir cada user criar apenas 2 salas, para não ficar salas atoa consumindo memoria (caso ele apague alguma, libera para criar novas)
         firestore().collection('MESSAGE_THREADS')
             .get()
-            .then( (snapshot) => {
+            .then((snapshot) => {
                 let appThreadsPerUser = 0;
 
                 snapshot.docs.map(m => {
-                    if (m.data().owner === user.uid){
+                    if (m.data().owner === user.uid) {
                         appThreadsPerUser += 1;
                     }
                 })
-                if (appThreadsPerUser >= 2) {
+                if (appThreadsPerUser >= 3) {
                     alert('Voce ja atingiu o limite de salas, favor, para criar uma nova, apague uma que não está mais em uso.');
                 }
                 else {
@@ -48,7 +46,6 @@ function ModalNewGroup({ setVisible, setUpdateScreen }) {
             })
     }
 
-    // Salvar sala/grupochat no db.
     function createChat() {
         firestore()
             .collection('MESSAGE_THREADS')
@@ -67,7 +64,7 @@ function ModalNewGroup({ setVisible, setUpdateScreen }) {
                     system: true,
                 })
                     .then(() => {
-                        setVisible()  // Fechar o modal automaticamente.
+                        setVisible()
                         setUpdateScreen();
                     })
 
@@ -89,7 +86,7 @@ function ModalNewGroup({ setVisible, setUpdateScreen }) {
                 <TextInput
                     value={nameChat}
                     onChangeText={(text) => setNameChat(text)}
-                    placeholder="Nome da sala de networking"
+                    placeholder="Nome da sala (ex. contrata-se/duvidas em)"
                 />
 
                 <ButtonCreate bg="#64943f" onPress={handleButtonCreate}>

@@ -24,7 +24,7 @@ min-height: 48px;
 `;
 
 export const ButtonSendMessages = styled.TouchableOpacity`
-backgroundColor: #51C880;
+background-color: #51C880;;
 height: 48px;
 width: 48px;
 align-Items: center;

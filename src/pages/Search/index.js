@@ -1,11 +1,16 @@
 import React, { useState, useEffect } from "react";
-import { Text } from 'react-native';
 
 import firestore from '@react-native-firebase/firestore';
 
 import Feather from 'react-native-vector-icons/Feather';
 
-import { Container, Input, AreaUnput, List } from './styles';
+import {
+  Container
+  , Input
+  , AreaUnput
+  , List
+} from './styles';
+
 import SearchList from "../../components/SearchList";
 
 function Search() {
@@ -22,7 +27,7 @@ function Search() {
 
     const subscriber = firestore().collection('users')
       .where('nome', '>=', inputSearch)
-      .where('nome', '<=', inputSearch + "\uf8ff")  // Padrão da doc para buscar no banco de nomes, pedido na doc do projeto
+      .where('nome', '<=', inputSearch + "\uf8ff")
       .onSnapshot(snapshot => {
 
         const listusers = [];
@@ -36,7 +41,7 @@ function Search() {
         setUsers(listusers)
       })
 
-      return () => subscriber();
+    return () => subscriber();
 
   }, [inputSearch])
 
@@ -57,7 +62,7 @@ function Search() {
 
       <List
         data={users}
-        renderItem={ ({item}) => <SearchList data={item}/> }  // Falta colocar uma verificação, para caso não encontrar, exibir uma mensagem dizendo que não foi encontrado dados com aquela pesquisa.
+        renderItem={({ item }) => <SearchList data={item} />}  // Falta colocar uma verificação, para caso não encontrar, exibir uma mensagem dizendo que não foi encontrado dados com aquela pesquisa.
       />
 
     </Container>

@@ -11,7 +11,6 @@ function SearchList({ data }) {
     return (
         <Container onPress={ () => navigation.navigate("PostsUser", {title: data.nome, userId: data.id})}>
             <UserName>{data.nome}</UserName>
-
         </Container>
     )
 }

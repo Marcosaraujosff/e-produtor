@@ -26,9 +26,10 @@ import {
 
 function Profile() {
 
-  const { signOut, user, setUser, storageUser } = useContext(AuthContext);
+  const { signOut, user, setUser, storageUser, updateUserProfile } = useContext(AuthContext);
 
-  const [name, setName] = useState(user?.nome);
+  const [zipcode, setZipcode] = useState(user?.zipcode);
+  const [city, setCity] = useState(user?.city)
   const [url, setUrl] = useState('');
   const [openModal, setOpenModal] = useState(false);
 
@@ -57,40 +58,60 @@ function Profile() {
   }
 
   async function updateProfile() {
-    // Verificar se foi digitado algo.
-    if (name === '') {
+    if (city === '' || zipcode === '') {
       return;
     }
 
-    await firestore().collection('users')
-      .doc(user?.uid)
-      .update({
-        nome: name
-      })
-
-    // Buscar as publicações do user e atualizar o nome também.
-    const postDocs = await firestore().collection('posts')
-      .where('userId', '==', user?.uid).get();
-
-    // Percorrer as publicações e atualizar.
-    postDocs.forEach(async doc => {
-      await firestore().collection('posts').doc(doc.id)
-        .update({
-          autor: name
-        })
-    })
-
-    // Atualizar as informações para o AuthContext.
-
-    let data = {
-      uid: useState.uid,
-      nome: name,
-      email: user.email,
+    let dataUpdate = {
+      userId: user.id,
+      city: city,
+      zipcode: zipcode
     }
 
-    setUser(data);
-    storageUser(data);
+    await updateUserProfile(dataUpdate);
+
+    let userData = {
+      id: user.id,
+      email: user.email,
+      city: user.city,
+      zipcode: user.zipcode
+    }
+
+    setUser(userData);
+    storageUser(userData);
     setOpenModal(false);
+
+
+    /* await firestore().collection('users')
+       .doc(user?.uid)
+       .update({
+         nome: name
+       })  
+ 
+     // Buscar as publicações do user e atualizar o nome também.
+     const postDocs = await firestore().collection('posts')
+       .where('userId', '==', user?.uid).get();
+ 
+     // Percorrer as publicações e atualizar.
+     postDocs.forEach(async doc => {
+       await firestore().collection('posts').doc(doc.id)
+         .update({
+           autor: name
+         })
+     })
+ 
+     // Atualizar as informações para o AuthContext.
+ 
+     let data = {
+       uid: useState.uid,
+       nome: name,
+       email: user.email,
+     }
+ 
+     setUser(data);
+     storageUser(data);
+     setOpenModal(false);
+     */
 
   }
 
@@ -172,14 +193,14 @@ function Profile() {
       )}
 
 
-      <Name> {user?.nome} </Name>
+      <Name> {user?.name} </Name>
       <Email> {user?.email} </Email>
 
       <Button bg="#64943f" onPress={() => setOpenModal(true)}>
         <ButtonText color="#FFF">Atualizar Perfil</ButtonText>
       </Button>
 
-      <Button bg="#DDD" onPress={handleSignOut} >
+      <Button bg="#DDD" onPress={signOut} >
         <ButtonText color="#353840">Sair</ButtonText>
       </Button>
 
@@ -195,10 +216,16 @@ function Profile() {
           </ButtonBack>
 
           <Input
-            placeholder={user?.nome}
-            value={name}
-            onChangeText={(text) => setName(text)}
+            placeholder={user?.city}
+            value={city}
+            onChangeText={(text) => setCity(text)}
           />
+          <Input
+            placeholder={user?.zipcode}
+            value={zipcode}
+            onChangeText={(text) => setZipcode(text)}
+          />
+
           <Button bg="#64943f" onPress={updateProfile} >
             <ButtonText color="#353840">Salvar</ButtonText>
           </Button>

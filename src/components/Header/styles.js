@@ -16,3 +16,13 @@ font-size: 32px;
 font-weight: bold;
 padding-bottom: 15px;
 `;
+
+export const ButtonProfile = styled.TouchableOpacity`
+position: absolute;
+right: 5%;
+`;
+
+export const ButtonNotification = styled.TouchableOpacity`
+position: absolute;
+right: 18%;
+`;

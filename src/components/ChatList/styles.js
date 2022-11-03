@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from "styled-components/native";
 
 export const Container = styled.TouchableOpacity`
 
@@ -26,11 +26,11 @@ flex-direction: row;
 export const NameChat = styled.Text`
 font-size: 18px;
 font-weight: bold;
-color: "#000";
+color: #000;
 `;
 
 export const TextLastMessage = styled.Text`
-color: "#C1C1C1";
+color: #C1C1C1;
 font-size: 16px;
 margin-top: 2px;
 `;

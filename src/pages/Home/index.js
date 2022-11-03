@@ -1,5 +1,5 @@
 import React, { useState, useContext, useCallback } from "react";
-import { Text, ActivityIndicator, View } from 'react-native';
+import { ActivityIndicator, View } from 'react-native';
 
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import Feather from 'react-native-vector-icons/Feather';
@@ -9,6 +9,8 @@ import { Container, ButtonPost, ListPosts } from './styles';
 import Header from "../../components/Header";
 import { AuthContext } from '../../contexts/auth';
 import PostList from '../../components/PostsList';
+
+import { api } from "../../services/api";
 
 function Home() {
   const { user } = useContext(AuthContext)
@@ -26,26 +28,51 @@ function Home() {
       let isActive = true;
 
       function fetchPosts() {
-        firestore().collection('posts').orderBy('created', 'desc').limit(5).get()
-          .then((snapshot) => {
 
+
+        api.get('/getPosts')
+          .then((value) => {
             if (isActive) {
               setPosts([]);
               const postList = [];
 
-              snapshot.docs.map(p => {
+              value.data.map(() => {
                 postList.push({
-                  ...p.data(),
-                  id: p.id,
-                })
+                  ...value.data,
+                }
+                )
               })
 
-              setEmptyList(!!snapshot.empty);
-              setPosts(postList);
-              setLastItem(snapshot.docs[snapshot.docs.length - 1]);  // Seta qual ultima publicação renderizada.
-              setLoading(false);
+              console.log(postList)
+
             }
           })
+
+          .catch((error) => {
+            console.log(error)
+          })
+
+
+        /* firestore().collection('posts').orderBy('created', 'desc').limit(5).get()
+           .then((snapshot) => {
+ 
+             if (isActive) {
+               setPosts([]);
+               const postList = [];
+ 
+               snapshot.docs.map(m => {
+                 postList.push({
+                   ...m.data(),
+                   id: m.id,
+                 })
+               })
+ 
+               setEmptyList(!!snapshot.empty);
+               setPosts(postList);
+               setLastItem(snapshot.docs[snapshot.docs.length - 1]);  // Seta qual ultima publicação renderizada.
+               setLoading(false);
+             }
+           })  */
       }
 
       fetchPosts();
@@ -57,61 +84,114 @@ function Home() {
     }, [])
   )
 
-    //Buscar mais pubicações quando usuario atualizar a pagina.
   async function handleRefreshPost() {
     setLoadingRefresh(true);
 
-    firestore().collection('posts').orderBy('created', 'desc').limit(5).get()
-      .then((snapshot) => {
-
+    api.get('/getPosts')
+      .then((value) => {
+        if (isActive) {
           setPosts([]);
           const postList = [];
 
-          snapshot.docs.map(p => {
+          value.data.map(() => {
             postList.push({
-              ...p.data(),
-              id: p.id,
-            })
+              ...value.data,
+            }
+            )
           })
 
           setEmptyList(false);
           setPosts(postList);
-          setLastItem(snapshot.docs[snapshot.docs.length - 1]);  // Seta qual ultima publicação renderizada.
+          setLastItem(value.data[value.data.length - 1]);
+          console.log(setLastItem)
           setLoading(false);
+
+        }
       })
-      setLoadingRefresh(false);
+
+      .catch((error) => {
+        console.log(error)
+      })
+
+    setLoadingRefresh(false);
+
+    /* firestore().collection('posts').orderBy('created', 'desc').limit(5).get()
+       .then((snapshot) => {
+ 
+         setPosts([]);
+         const postList = [];
+ 
+         snapshot.docs.map(p => {
+           postList.push({
+             ...p.data(),
+             id: p.id,
+           })
+         })  
+ 
+         setEmptyList(false);
+         setPosts(postList);
+         setLastItem(snapshot.docs[snapshot.docs.length - 1]);
+         setLoading(false);
+       }) */
+
 
   }
 
-   // Buscar mais publicações ao chegar no final da lista no home.
-  async function getListPosts(){
-    if(emptyList){
+  async function getListPosts() {
+    if (emptyList) {
       setLoading(false);
       return null;
-    }                                // Se a lista estiver vazia, parar a execução do loading
-    if(loading) 
-    return;
+    }
+    if (loading)
+      return;
 
-    firestore().collection('posts')
-    .orderBy('created', 'desc')
-    .limit(5)
-    .startAfter(lastItem)
-    .get()
-    .then( (snapshot) => {
-      const postList = [];
+    api.get('/getPosts')
+      .then((value) => {
+        if (isActive) {
+          setPosts([]);
+          const postList = [];
 
-      snapshot.docs.map( m => {
-        postList.push({
-          ...m.data(),
-          id: m.id,
-        })
+          value.data.map(() => {
+            postList.push({
+              ...value.data,
+            }
+            )
+          })
+
+          console.log(postList)
+
+        }
       })
 
-      setEmptyList(!!snapshot.empty)
-      setLastItem(snapshot.docs[snapshot.docs.length -1])
-      setPosts(oldPosts => [...oldPosts, ...postList]);
-      setLoading(false);
-    })
+      .catch((error) => {
+        console.log(error)
+      })
+
+    setEmptyList(!!snapshot.empty)
+   // setLastItem(snapshot.docs[snapshot.docs.length - 1])
+    //setPosts(oldPosts => [...oldPosts, ...postList]);
+    setLoading(false);
+
+    /* firestore().collection('posts')
+      .orderBy('created', 'desc')
+      .limit(5)
+      .startAfter(lastItem)
+      .get()
+      .then((snapshot) => {
+        const postList = [];
+
+        snapshot.docs.map(m => {
+          postList.push({
+            ...m.data(),
+            id: m.id,
+          })
+        })
+
+        setEmptyList(!!snapshot.empty)
+        setLastItem(snapshot.docs[snapshot.docs.length - 1])
+        setPosts(oldPosts => [...oldPosts, ...postList]);
+        setLoading(false);
+      })  */
 
   }
 
@@ -125,24 +205,24 @@ function Home() {
             <ActivityIndicator size={50} color="#64943f" />
           </View>
         ) : (
-        <ListPosts
-          showsVerticalScrollIndicator={false}
-          data={posts}
-          renderItem={({ item }) => (
-            <PostList
-              data={item}
-              userId={user?.uid}
-            />
+          <ListPosts
+            showsVerticalScrollIndicator={false}
+            data={posts}
+            renderItem={({ item }) => (
+              <PostList
+                data={item}
+                userId={user?.id}
+              />
 
-          )}
+            )}
 
-          refreshing={loadingRefresh}  // Controla quando será exibido o loading na tela.
-          onRefresh={handleRefreshPost}  // Chama a função que busca publicações atualizadas.
+            refreshing={loadingRefresh}
+            onRefresh={handleRefreshPost}
 
-          onEndReached={ () => getListPosts() }  // Chama a função para buscar mais posts
-          onEndReachedThreshold={0.1}  // Determinar quando começar a carregar novos posts pra renderizar.
+            onEndReached={() => getListPosts()}
+            onEndReachedThreshold={0.1}
 
-        />
+          />
         )}
 
 
@@ -151,7 +231,7 @@ function Home() {
         onPress={() => navigation.navigate("NewPost")}
       >
         <Feather
-          name="edit-2"
+          name="edit"
           color="#FFF"
           size={25}
         />
