@@ -5,8 +5,6 @@ import { AuthContext } from '../../contexts/auth'
 import { useNavigation } from '@react-navigation/native';
 import { Container, Input, ButtonText, Button } from './styles'
 
-import firestore from '@react-native-firebase/firestore';
-import storage from '@react-native-firebase/storage'
 import { api } from "../../services/api";
 import { id } from "date-fns/locale";
 
@@ -18,17 +16,12 @@ function Newpost() {
 
   const { user } = useContext(AuthContext);
 
-
-  console.log(user)
-
   useLayoutEffect(() => {
-
-    console.log(user)
 
     const options = navigation.setOptions({
       headerRight: () => (
         <Button onPress={() => handlePost()}>
-          <ButtonText>Compartilhar</ButtonText>
+          <ButtonText>Publicar</ButtonText>
         </Button>
       ),
     })
@@ -37,21 +30,24 @@ function Newpost() {
 
   async function handlePost() {
     if (post === '') {
-      alert("Digite algo para ser postado");
+      alert("Digite algo para ser publicado.");
       return;
     }
 
-    let avatarUrl = " ";
+    let avatarUrl = null;
 
-    /*  try {
-        let response = await storage().ref('users').child(user?.uid).getDownloadURL();  // Obtem as informações no banco se tem foto do perfil ou não.
-        avatarUrl = response;
-  
-      } catch (err) {
-        avatarUrl = null;
-      }   */
+    try {
+
+      let response = await api.get('/me');
+
+      avatarUrl = response?.data?.avatarUrl;
+
+    } catch (error) {
+      avatarUrl = null;
+    }
 
     const data = {
+      created: new Date(),
       content: post,
       autor: user?.name,
       userId: user?.id,
@@ -66,27 +62,9 @@ function Newpost() {
       setPost('')
 
     } catch (error) {
-      console.log("erro :", error)
+      console.log("erro :", error);
+      throw new error("Erro ao registrar dados.")
     }
-
-
-    /* await firestore().collection('posts')
-       .add({
-         created: new Date(),
-         content: post,
-         autor: user?.nome,
-         userId: user?.uid,
-         likes: 0,
-         avatarUrl,
-       })
-       .then(() => {
-         setPost('')
-       })
-       .catch((error) => {
-         alert('Erro ao criar a publicação', error)
-       })
- 
-       */
 
     navigation.goBack()
   }

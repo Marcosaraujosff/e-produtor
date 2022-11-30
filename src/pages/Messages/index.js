@@ -35,7 +35,6 @@ function Messages({ route }) {
 
     useEffect(() => {
 
-
         const unsubscribeListener = firestore().collection('MESSAGE_THREADS')
             .doc(thread._id)
             .collection('MESSAGES')

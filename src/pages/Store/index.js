@@ -1,4 +1,4 @@
-import StoreDefault from "../../components/StoreDefault";
+import StoreDefault from "../../components/StoreComponents/StoreDefault";
 
 import React, { useContext } from "react";
 

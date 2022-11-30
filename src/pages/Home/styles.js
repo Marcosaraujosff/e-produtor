@@ -6,6 +6,7 @@ background-color: #36393F;
 `;
 
 export const ButtonPost = styled.TouchableOpacity`
+position: absolute;
 bottom: 5%;
 right: 6%;
 width: 60px;
@@ -15,11 +16,9 @@ border-radius: 30px;
 justify-content: center;
 align-items: center;
 z-index: 99;
-position: absolute;
 `;
 
 export const ListPosts = styled.FlatList`
 flex: 1;
 background-color: #F1F1F1;
-
 `;

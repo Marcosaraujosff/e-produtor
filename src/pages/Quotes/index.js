@@ -14,7 +14,7 @@ function Quotes() {
 
     return (
         <Container>
-            <Header />
+            <Header/>
             <QuotesCCCV />
 
         </Container>

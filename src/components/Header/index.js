@@ -13,7 +13,7 @@ function Header() {
 
     return (
         <Container>
-            <Title>e-
+            <Title>+ 
                 <Text style={{ color: '#77DD77' }}>Produtor</Text>
             </Title>
             <ButtonProfile

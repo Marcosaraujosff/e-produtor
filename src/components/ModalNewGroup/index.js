@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import {
     View
     , TouchableWithoutFeedback
@@ -15,12 +15,13 @@ import {
     , ButtonTextCreate
     , TextInput
 } from "./styles";
+import { AuthContext } from "../../contexts/auth";
 
 function ModalNewGroup({ setVisible, setUpdateScreen }) {
 
     const [nameChat, setNameChat] = useState('');
 
-    const user = auth().currentUser.toJSON();
+    const { user } = useContext(AuthContext);
     
     function handleButtonCreate() {
 

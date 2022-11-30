@@ -1,8 +1,9 @@
 import React from "react";
 
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { createAppContainer } from 'react-navigation';
+import { createDrawerNavigator } from '@react-navigation/drawer';
 
 import Feather from 'react-native-vector-icons/Feather';
 
@@ -24,10 +25,12 @@ import Calculator from "../pages/Calculator";
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
+const Drawer = createDrawerNavigator();
 
 function StackRoutes() {
     return (
         <Stack.Navigator>
+
             <Stack.Screen
                 name="Home"
                 component={Home}
@@ -121,9 +124,39 @@ function StackRoutes() {
     )
 }
 
+function DrawerRoutes() {
+    return (
+        <Drawer.Navigator
+            // drawerContent={}
+            initialRouteName="Home"
+            defaultStatus="open"
+            screenOptions={{
+                headerShown: false,
+            }}>
+
+            <Drawer.Screen
+                name="Quotes"
+                component={Quotes}
+            />
+
+            <Drawer.Screen
+                name="Home"
+                component={Home}
+            />
+
+            <Drawer.Screen
+                name="Schedule"
+                component={Schedule}
+            />
+
+        </Drawer.Navigator>
+    );
+}
+
 function AppRoutes() {
     return (
         <Tab.Navigator
+            initialRouteName="HomeStack"
             screenOptions={{
                 headerShown: false,
                 tabBarHideOnKeyboard: true,
@@ -137,7 +170,18 @@ function AppRoutes() {
             }}
         >
             <Tab.Screen
-                name="HomeTab"
+                name="DrawerRoutes"
+                component={DrawerRoutes}
+                options={{
+                    tabBarIcon: ({ color, size }) => {
+                        return <Feather name="menu" color={color} size={size} />
+                    }
+
+                }}
+            />
+
+            <Tab.Screen
+                name="HomeStack"
                 component={StackRoutes}
                 options={{
                     tabBarIcon: ({ color, size }) => {
@@ -176,17 +220,8 @@ function AppRoutes() {
                     }
                 }}
             />
-
-            <Tab.Screen
-                name="MoreFunctions"
-                component={MoreFunctions}
-                options={{
-                    tabBarIcon: ({ color, size }) => {
-                        return <Feather name="menu" color={color} size={size} />
-                    }
-                }}
-            />
         </Tab.Navigator>
+
     )
 }
 

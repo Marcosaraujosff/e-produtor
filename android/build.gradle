@@ -21,6 +21,10 @@ buildscript {
     }  
 }
 
+project.ext.react = [
+  enableHermes: true  // <-change this to true
+]
+
 allprojects {
     repositories {
         mavenCentral()

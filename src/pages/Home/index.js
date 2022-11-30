@@ -18,9 +18,9 @@ function Home() {
 
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [loadingRefresh, setLoadingRefresh] = useState(false);   // Controla o refresh
-  const [lastItem, setLastItem] = useState('');                  // Armazena o ultimo item renderizado na lista de publicações
-  const [emptyList, setEmptyList] = useState(false);             // Controla se a lista de publicações esta vazia ou não
+  const [loadingRefresh, setLoadingRefresh] = useState(false);
+  const [lastItem, setLastItem] = useState('');
+  const [emptyList, setEmptyList] = useState(false);
 
   useFocusEffect(
     useCallback(() => {
@@ -42,14 +42,14 @@ function Home() {
                 }
                 )
               })
-
               console.log(postList)
 
             }
           })
 
           .catch((error) => {
-            console.log(error)
+            console.log(error);
+            setLoading(false);
           })
 
 
@@ -76,6 +76,9 @@ function Home() {
       }
 
       fetchPosts();
+      setLoading(false)
+
+
 
       return () => {
         isActive = false;
@@ -87,7 +90,7 @@ function Home() {
   async function handleRefreshPost() {
     setLoadingRefresh(true);
 
-    api.get('/getPosts')
+  /*  api.get('/getPosts')
       .then((value) => {
         if (isActive) {
           setPosts([]);
@@ -107,15 +110,13 @@ function Home() {
           setLoading(false);
 
         }
-      })
+      })  
 
       .catch((error) => {
         console.log(error)
-      })
+      })   */
 
-    setLoadingRefresh(false);
-
-    /* firestore().collection('posts').orderBy('created', 'desc').limit(5).get()
+     firestore().collection('posts').orderBy('created', 'desc').limit(5).get()
        .then((snapshot) => {
  
          setPosts([]);
@@ -132,13 +133,16 @@ function Home() {
          setPosts(postList);
          setLastItem(snapshot.docs[snapshot.docs.length - 1]);
          setLoading(false);
-       }) */
+       }) 
+
+       setLoading(false)
+       setLoadingRefresh(false);
 
 
   }
 
   async function getListPosts() {
-    if (emptyList) {
+  /*  if (emptyList) {
       setLoading(false);
       return null;
     }
@@ -168,11 +172,11 @@ function Home() {
       })
 
     setEmptyList(!!snapshot.empty)
-   // setLastItem(snapshot.docs[snapshot.docs.length - 1])
+    // setLastItem(snapshot.docs[snapshot.docs.length - 1])
     //setPosts(oldPosts => [...oldPosts, ...postList]);
-    setLoading(false);
+    setLoading(false);   */
 
-    /* firestore().collection('posts')
+     firestore().collection('posts')
       .orderBy('created', 'desc')
       .limit(5)
       .startAfter(lastItem)
@@ -191,7 +195,9 @@ function Home() {
         setLastItem(snapshot.docs[snapshot.docs.length - 1])
         setPosts(oldPosts => [...oldPosts, ...postList]);
         setLoading(false);
-      })  */
+      })  
+
+      setLoading(false);
 
   }
 
@@ -231,7 +237,7 @@ function Home() {
         onPress={() => navigation.navigate("NewPost")}
       >
         <Feather
-          name="edit"
+          name="edit-2"
           color="#FFF"
           size={25}
         />
